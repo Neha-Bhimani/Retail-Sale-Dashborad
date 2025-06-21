@@ -27,8 +27,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
 #json
 db_config.json
+
 # pytype static type analyzer
 .pytype/
 
