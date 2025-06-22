@@ -8,9 +8,13 @@ import urllib.parse
 # ----------------------------
 # Load DB credentials securely
 # ----------------------------
-def load_db_config(path="config/db_config.json"):
-    with open(path, "r") as file:
-        return json.load(file)
+def load_db_config():
+    if st.secrets.get("db_config"):
+        return st.secrets["db_config"]
+    else:
+        with open("config/db_config.json", "r") as file:
+            return json.load(file)
+
 
 # ----------------------------
 # Create SQLAlchemy engine
