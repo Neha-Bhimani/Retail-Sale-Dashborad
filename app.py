@@ -4,16 +4,18 @@ import plotly.express as px
 import json
 from sqlalchemy import create_engine
 import urllib.parse
+import os
 
 # ----------------------------
 # Load DB credentials securely
 # ----------------------------
 def load_db_config():
-    if st.secrets.get("db_config"):
-        return st.secrets["db_config"]
-    else:
-        with open("config/db_config.json", "r") as file:
-            return json.load(file)
+    return {
+        "user": os.getenv("DB_USER"),
+        "password": os.getenv("DB_PASSWORD"),
+        "host": os.getenv("DB_HOST"),
+        "database": os.getenv("DB_NAME")
+    }
 
 
 # ----------------------------
@@ -21,11 +23,10 @@ def load_db_config():
 # ----------------------------
 def create_db_engine():
     config = load_db_config()
-    user = config["user"]
     encoded_password = urllib.parse.quote_plus(config['password'])
-    host = config["host"]
-    database = config["database"]
-    return create_engine(f"mysql+pymysql://{user}:{encoded_password}@{host}/{database}")
+    return create_engine(
+        f"mysql+pymysql://{config['user']}:{encoded_password}@{config['host']}/{config['database']}"
+    )
 
 # ----------------------------
 # Load data from database
